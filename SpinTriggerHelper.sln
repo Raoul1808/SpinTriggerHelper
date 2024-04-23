@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpinTriggerHelper", "SpinTriggerHelper\SpinTriggerHelper.csproj", "{DF6517F3-D42E-488B-8A99-288D883FE5D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpinTriggerHelper.TestMod", "SpinTriggerHelper.TestMod\SpinTriggerHelper.TestMod.csproj", "{613D2338-F507-47A4-9FA6-4B5BB964279F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{DF6517F3-D42E-488B-8A99-288D883FE5D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF6517F3-D42E-488B-8A99-288D883FE5D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF6517F3-D42E-488B-8A99-288D883FE5D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{613D2338-F507-47A4-9FA6-4B5BB964279F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{613D2338-F507-47A4-9FA6-4B5BB964279F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{613D2338-F507-47A4-9FA6-4B5BB964279F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{613D2338-F507-47A4-9FA6-4B5BB964279F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
