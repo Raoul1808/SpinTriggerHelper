@@ -48,15 +48,21 @@ namespace SpinTriggerHelper
         /// Fires the given method when a trigger is fired/updates
         /// </summary>
         /// <param name="action">A callback method</param>
-        /// <param name="key">The key to use internally</param>
         /// <typeparam name="T">The affected trigger (required)</typeparam>
-        public static void RegisterTriggerEvent<T>(TriggerUpdate action, string key = "") where T : ITrigger
+        public static void RegisterTriggerEvent<T>(TriggerUpdate action) where T : ITrigger
+        {
+            RegisterTriggerEvent(typeof(T).Name, action);
+        }
+
+        /// <summary>
+        /// Fires the given method when a trigger is fired/updates
+        /// </summary>
+        /// <param name="action">A callback method</param>
+        /// <param name="key">The key to use internally</param>
+        public static void RegisterTriggerEvent(string key, TriggerUpdate action)
         {
             if (string.IsNullOrWhiteSpace(key))
-            {
-                key = typeof(T).Name;
-            }
-
+                throw new ArgumentException("Invalid key");
             string fullKey = $"{Assembly.GetCallingAssembly().GetName().Name}-{key}";
             if (!TriggerStores.TryGetValue(fullKey, out var store))
             {
