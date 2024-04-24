@@ -18,7 +18,40 @@ namespace SpinTriggerHelper.TestMod
             _logger = Logger;
             Log("Hello from test mod!");
             
-            TriggerManager.TestCallingAssembly();
+            TriggerManager.OnChartLoad += path =>
+            {
+                // Do sum loading shenanigans
+                var triggers = new ITrigger[]
+                {
+                    new TestTrigger
+                    {
+                        Message = "This should fire at 2 seconds",
+                        Time = 2f,
+                        AlreadyTriggered = false,
+                    },
+                    new TestTrigger
+                    {
+                        Message = "This should fire at 5 seconds",
+                        Time = 5f,
+                        AlreadyTriggered = false,
+                    },
+                    new TestTrigger
+                    {
+                        Message = "This should fire at 3.5 seconds",
+                        Time = 3.5f,
+                        AlreadyTriggered = false,
+                    }
+                };
+                TriggerManager.LoadTriggers(triggers);
+            };
+            
+            TriggerManager.RegisterTriggerEvent<TestTrigger>((trigger, trackTime) =>
+            {
+                var testTrigger = (TestTrigger)trigger;
+                if (testTrigger.AlreadyTriggered) return;
+                Log(testTrigger.Message);
+                testTrigger.AlreadyTriggered = true;
+            });
         }
 
         internal static void Log(object msg) => _logger.LogMessage(msg);

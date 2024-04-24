@@ -1,5 +1,6 @@
 using BepInEx;
 using BepInEx.Logging;
+using HarmonyLib;
 
 namespace SpinTriggerHelper
 {
@@ -16,8 +17,44 @@ namespace SpinTriggerHelper
         {
             _logger = Logger;
             Log($"Hello from {Name}");
+            Harmony harmony = new Harmony(Guid);
+            harmony.PatchAll(typeof(Patches));
         }
 
         internal static void Log(object msg) => _logger.LogMessage(msg);
+
+        class Patches
+        {
+            [HarmonyPatch(typeof(Track), nameof(Track.Update))]
+            [HarmonyPostfix]
+            private static void UpdateTriggers()
+            {
+                if (Track.PlayStates.Length == 0)
+                    return;
+                var playStateFirst = Track.PlayStates[0];
+                TriggerManager.Update(playStateFirst.currentTrackTime);
+            }
+
+            [HarmonyPatch(typeof(Track), nameof(Track.PlayTrack))]
+            [HarmonyPostfix]
+            private static void ChartPlay()
+            {
+                TriggerManager.ResetTriggerStores();
+            }
+
+            [HarmonyPatch(typeof(SplineTrackData.DataToGenerate), MethodType.Constructor, typeof(PlayableTrackData))]
+            [HarmonyPostfix]
+            private static void ChartLoaded(PlayableTrackData trackData)
+            {
+                // TODO: find a better patch than this
+                if (trackData.TrackDataList.Count == 0)
+                    return;
+                var data = trackData.TrackDataList[0];
+                string path = data.CustomFile?.FilePath;
+                if (string.IsNullOrEmpty(path))
+                    return;
+                TriggerManager.InvokeChartLoadEvent(path);
+            }
+        }
     }
 }
