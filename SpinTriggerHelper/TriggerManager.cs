@@ -15,31 +15,27 @@ namespace SpinTriggerHelper
         /// </summary>
         public static event ChartLoad OnChartLoad;
 
-        private static string GetKeyForTrigger(Assembly assembly, ITrigger trigger)
-        {
-            return $"{assembly.GetName().Name}-{trigger.GetType().Name}";
-        }
-
-        private static string GetKeyForTrigger<T>(Assembly assembly)
-        {
-            return $"{assembly.GetName().Name}-{typeof(T).Name}";
-        }
-
         /// <summary>
         /// Loads the given triggers into the internal trigger manager.
         /// </summary>
         /// <param name="triggers">The list of triggers</param>
+        /// <param name="key">The key to use internally</param>
         /// <exception cref="ArgumentException">Raised if the given array contains nothing</exception>
-        public static void LoadTriggers(ITrigger[] triggers)
+        public static void LoadTriggers(ITrigger[] triggers, string key = "")
         {
             if (triggers.Length == 0)
                 throw new ArgumentException("ITrigger array needs to contain triggers");
-            var trigger = triggers[0];
-            string key = GetKeyForTrigger(Assembly.GetCallingAssembly(), trigger);
-            if (!TriggerStores.TryGetValue(key, out var store))
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                var trigger = triggers[0];
+                key = trigger.GetType().Name;
+            }
+
+            string fullKey = $"{Assembly.GetCallingAssembly().GetName().Name}-{key}";
+            if (!TriggerStores.TryGetValue(fullKey, out var store))
             {
                 store = new ModTriggerStore();
-                TriggerStores.Add(key, store);
+                TriggerStores.Add(fullKey, store);
             }
 
             store.Clear();
@@ -52,14 +48,20 @@ namespace SpinTriggerHelper
         /// Fires the given method when a trigger is fired/updates
         /// </summary>
         /// <param name="action">A callback method</param>
+        /// <param name="key">The key to use internally</param>
         /// <typeparam name="T">The affected trigger (required)</typeparam>
-        public static void RegisterTriggerEvent<T>(TriggerUpdate action) where T : ITrigger
+        public static void RegisterTriggerEvent<T>(TriggerUpdate action, string key = "") where T : ITrigger
         {
-            string key = GetKeyForTrigger<T>(Assembly.GetCallingAssembly());
-            if (!TriggerStores.TryGetValue(key, out var store))
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                key = typeof(T).Name;
+            }
+
+            string fullKey = $"{Assembly.GetCallingAssembly().GetName().Name}-{key}";
+            if (!TriggerStores.TryGetValue(fullKey, out var store))
             {
                 store = new ModTriggerStore();
-                TriggerStores.Add(key, store);
+                TriggerStores.Add(fullKey, store);
             }
 
             store.OnTriggerUpdate += action;
