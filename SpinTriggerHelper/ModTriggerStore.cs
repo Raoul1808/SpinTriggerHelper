@@ -50,10 +50,16 @@ namespace SpinTriggerHelper
         
         public void Update(float trackTime)
         {
-            if (trackTime >= _nextTrigger?.Time)
+            // If the current trigger is out of time and the previous trigger is set, this means there was some sort of rewind effect
+            // Rewinding shouldn't happen when actually playing the game, so while this might cause some calculation and indexing overhead, I consider this fine enough to not throw players off.
+            if (_currentTrigger?.Time > trackTime && _previousTrigger != null)
+                Reset();
+            while (trackTime >= _nextTrigger?.Time)
             {
                 OnTriggerUpdate?.Invoke(_currentTrigger, _nextTrigger.Time);
+                _previousTrigger = _currentTrigger;
                 _currentTrigger = _nextTrigger;
+                _nextTrigger = null;
                 _currentOrNextIndex++;
                 if (_triggers.Count > _currentOrNextIndex)
                 {

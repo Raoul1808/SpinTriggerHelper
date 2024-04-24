@@ -25,32 +25,35 @@ namespace SpinTriggerHelper.TestMod
                 {
                     new TestTrigger
                     {
+                        Message = "Initial Trigger",
+                        Time = 0f,
+                    },
+                    new TestTrigger
+                    {
                         Message = "This should fire at 2 seconds",
                         Time = 2f,
-                        AlreadyTriggered = false,
                     },
                     new TestTrigger
                     {
                         Message = "This should fire at 5 seconds",
                         Time = 5f,
-                        AlreadyTriggered = false,
                     },
                     new TestTrigger
                     {
                         Message = "This should fire at 3.5 seconds",
                         Time = 3.5f,
-                        AlreadyTriggered = false,
                     }
                 };
                 TriggerManager.LoadTriggers(triggers);
             };
-            
+
+            string lastMessage = "";
             TriggerManager.RegisterTriggerEvent<TestTrigger>((trigger, trackTime) =>
             {
                 var testTrigger = (TestTrigger)trigger;
-                if (testTrigger.AlreadyTriggered) return;
+                if (testTrigger.Message == lastMessage) return;
                 Log(testTrigger.Message);
-                testTrigger.AlreadyTriggered = true;
+                lastMessage = testTrigger.Message;
             });
         }
 

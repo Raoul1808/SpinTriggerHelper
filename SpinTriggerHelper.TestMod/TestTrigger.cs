@@ -4,6 +4,5 @@ namespace SpinTriggerHelper.TestMod
     {
         public float Time { get; set; }
         public string Message { get; set; }
-        public bool AlreadyTriggered { get; set; }
     }
 }
