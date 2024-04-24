@@ -17,13 +17,13 @@ namespace SpinTriggerHelper
         {
             _logger = Logger;
             Log($"Hello from {Name}");
-            Harmony harmony = new Harmony(Guid);
+            var harmony = new Harmony(Guid);
             harmony.PatchAll(typeof(Patches));
         }
 
         internal static void Log(object msg) => _logger.LogMessage(msg);
 
-        class Patches
+        private class Patches
         {
             [HarmonyPatch(typeof(Track), nameof(Track.Update))]
             [HarmonyPostfix]
