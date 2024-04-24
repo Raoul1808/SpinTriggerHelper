@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -8,6 +9,10 @@ namespace SpinTriggerHelper
         private static readonly Dictionary<string, ModTriggerStore> TriggerStores = new Dictionary<string, ModTriggerStore>();
 
         public delegate void ChartLoad(string path);
+        
+        /// <summary>
+        /// This event is fired whenever the game loads a custom chart.
+        /// </summary>
         public static event ChartLoad OnChartLoad;
 
         private static string GetKeyForTrigger(Assembly assembly, ITrigger trigger)
@@ -20,10 +25,15 @@ namespace SpinTriggerHelper
             return $"{assembly.GetName().Name}-{typeof(T).Name}";
         }
 
+        /// <summary>
+        /// Loads the given triggers into the internal trigger manager.
+        /// </summary>
+        /// <param name="triggers">The list of triggers</param>
+        /// <exception cref="ArgumentException">Raised if the given array contains nothing</exception>
         public static void LoadTriggers(ITrigger[] triggers)
         {
             if (triggers.Length == 0)
-                return;
+                throw new ArgumentException("ITrigger array needs to contain triggers");
             var trigger = triggers[0];
             string key = GetKeyForTrigger(Assembly.GetCallingAssembly(), trigger);
             if (!TriggerStores.TryGetValue(key, out var store))
@@ -38,6 +48,11 @@ namespace SpinTriggerHelper
         
         public delegate void TriggerUpdate(ITrigger trigger, float trackTime);
         
+        /// <summary>
+        /// Fires the given method when a trigger is fired/updates
+        /// </summary>
+        /// <param name="action">A callback method</param>
+        /// <typeparam name="T">The affected trigger (required)</typeparam>
         public static void RegisterTriggerEvent<T>(TriggerUpdate action) where T : ITrigger
         {
             string key = GetKeyForTrigger<T>(Assembly.GetCallingAssembly());
