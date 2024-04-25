@@ -73,6 +73,31 @@ namespace SpinTriggerHelper
             store.OnTriggerUpdate += action;
         }
 
+        /// <summary>
+        /// Clears triggers for the corresponding trigger store
+        /// </summary>
+        /// <typeparam name="T">The affected trigger</typeparam>
+        public static void ClearTriggers<T>() where T : ITrigger
+        {
+            ClearTriggers(typeof(T).Name);
+        }
+
+        /// <summary>
+        /// Clears triggers for the corresponding trigger store
+        /// </summary>
+        /// <param name="key">The trigger store key</param>
+        public static void ClearTriggers(string key)
+        {
+            string fullKey = $"{Assembly.GetCallingAssembly().GetName().Name}-{key}";
+            if (!TriggerStores.TryGetValue(fullKey, out var store))
+            {
+                store = new ModTriggerStore();
+                TriggerStores.Add(fullKey, store);
+            }
+            
+            store.Clear();
+        }
+
         internal static void Update(float trackTime)
         {
             foreach (var store in TriggerStores.Values)
