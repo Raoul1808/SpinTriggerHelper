@@ -53,7 +53,7 @@ namespace SpinTriggerHelper
                 string path = data.CustomFile?.FilePath;
                 if (string.IsNullOrEmpty(path))
                     return;
-                TriggerManager.InvokeChartLoadEvent(path);
+                TriggerManager.InvokeChartLoadEvent(data);
             }
         }
     }

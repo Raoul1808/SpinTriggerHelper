@@ -8,7 +8,7 @@ namespace SpinTriggerHelper
     {
         private static readonly Dictionary<string, ModTriggerStore> TriggerStores = new Dictionary<string, ModTriggerStore>();
 
-        public delegate void ChartLoad(string path);
+        public delegate void ChartLoad(TrackData trackData);
         
         /// <summary>
         /// This event is fired whenever the game loads a custom chart.
@@ -81,9 +81,9 @@ namespace SpinTriggerHelper
             }
         }
 
-        internal static void InvokeChartLoadEvent(string path)
+        internal static void InvokeChartLoadEvent(TrackData trackData)
         {
-            OnChartLoad?.Invoke(path);
+            OnChartLoad?.Invoke(trackData);
         }
 
         internal static void ResetTriggerStores()

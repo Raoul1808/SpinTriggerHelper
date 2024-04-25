@@ -18,7 +18,7 @@ namespace SpinTriggerHelper.TestMod
             _logger = Logger;
             Log("Hello from test mod!");
             
-            TriggerManager.OnChartLoad += path =>
+            TriggerManager.OnChartLoad += data =>
             {
                 // Do sum loading shenanigans
                 var triggers = new ITrigger[]
