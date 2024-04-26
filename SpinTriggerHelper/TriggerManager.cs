@@ -98,6 +98,14 @@ namespace SpinTriggerHelper
             store.Clear();
         }
 
+        internal static void ClearAllTriggers()
+        {
+            foreach (var store in TriggerStores.Values)
+            {
+                store.Clear();
+            }
+        }
+
         internal static void Update(float trackTime)
         {
             foreach (var store in TriggerStores.Values)
@@ -108,6 +116,7 @@ namespace SpinTriggerHelper
 
         internal static void InvokeChartLoadEvent(TrackData trackData)
         {
+            ClearAllTriggers();
             OnChartLoad?.Invoke(trackData);
         }
 

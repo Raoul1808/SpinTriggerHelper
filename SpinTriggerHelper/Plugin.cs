@@ -42,6 +42,13 @@ namespace SpinTriggerHelper
                 TriggerManager.ResetTriggerStores();
             }
 
+            [HarmonyPatch(typeof(Track), nameof(Track.ReturnToPickTrack))]
+            [HarmonyPostfix]
+            private static void ReturnToPickTrack()
+            {
+                TriggerManager.ClearAllTriggers();
+            }
+
             [HarmonyPatch(typeof(SplineTrackData.DataToGenerate), MethodType.Constructor, typeof(PlayableTrackData))]
             [HarmonyPostfix]
             private static void ChartLoaded(PlayableTrackData trackData)
