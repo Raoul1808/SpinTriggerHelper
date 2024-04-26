@@ -54,6 +54,7 @@ namespace SpinTriggerHelper
             private static void ChartLoaded(PlayableTrackData trackData)
             {
                 // TODO: find a better patch than this
+                TriggerManager.ClearAllTriggers();
                 if (trackData.TrackDataList.Count == 0)
                     return;
                 var data = trackData.TrackDataList[0];

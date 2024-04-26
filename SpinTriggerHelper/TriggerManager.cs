@@ -116,7 +116,6 @@ namespace SpinTriggerHelper
 
         internal static void InvokeChartLoadEvent(TrackData trackData)
         {
-            ClearAllTriggers();
             OnChartLoad?.Invoke(trackData);
         }
 
